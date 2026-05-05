@@ -30,7 +30,7 @@ app.post('/roast', async (req, res) => {
   try {
     // Fetch real transactions from Mantle Explorer
     const txResponse = await fetch(
-      `https://explorer.mantle.xyz/api?module=account&action=txlist&address=${wallet}&limit=10`
+  `https://api.routescan.io/v2/network/mainnet/evm/5000/address/${wallet}/transactions?limit=10`
     );
     const txData = await txResponse.json();
     
