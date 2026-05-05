@@ -4,502 +4,103 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crypto Roast</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --red: #ff2d2d;
-      --orange: #ff6b00;
-      --yellow: #ffd600;
-      --dark: #0a0a0a;
-      --card: #111111;
-      --border: #222;
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--dark);
-      color: #fff;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Animated grid background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,45,45,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,45,45,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-
-    /* HERO */
-    .hero {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .flame-row {
-      font-size: 2.5rem;
-      letter-spacing: 4px;
-      animation: flicker 1.5s infinite alternate;
-      margin-bottom: 8px;
-    }
-
-    @keyframes flicker {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.85; transform: scale(1.03); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    h1 {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(4rem, 14vw, 7rem);
-      line-height: 0.9;
-      letter-spacing: 3px;
-      background: linear-gradient(135deg, #ff2d2d 0%, #ff6b00 50%, #ffd600 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(0 0 30px rgba(255,45,45,0.4));
-      margin-bottom: 12px;
-    }
-
-    .tagline {
-      font-size: 1rem;
-      color: #666;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .tagline span { color: var(--red); }
-
-    /* WARNING BANNER */
-    .warning-banner {
-      background: repeating-linear-gradient(
-        -45deg,
-        #ffd600,
-        #ffd600 10px,
-        #0a0a0a 10px,
-        #0a0a0a 20px
-      );
-      padding: 2px;
-      border-radius: 8px;
-      margin-bottom: 32px;
-    }
-    .warning-inner {
-      background: var(--dark);
-      border-radius: 6px;
-      padding: 10px 16px;
-      text-align: center;
-      font-size: 0.8rem;
-      color: #ffd600;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    /* INPUT SECTION */
-    .input-section {
-      margin-bottom: 32px;
-    }
-
-    .input-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #444;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 8px;
-    }
-
-    .input-wrap {
-      display: flex;
-      gap: 0;
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: border-color 0.2s;
-    }
-
-    .input-wrap:focus-within {
-      border-color: var(--red);
-      box-shadow: 0 0 0 3px rgba(255,45,45,0.15);
-    }
-
-    input {
-      flex: 1;
-      padding: 16px 20px;
-      background: var(--card);
-      color: #fff;
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      border: none;
-      outline: none;
-      min-width: 0;
-    }
-
-    input::placeholder { color: #333; }
-
-    .roast-btn {
-      padding: 16px 28px;
-      background: linear-gradient(135deg, var(--red), var(--orange));
-      color: #fff;
-      font-family: 'Bangers', cursive;
-      font-size: 1.3rem;
-      letter-spacing: 1px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .roast-btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, transparent, rgba(255,255,255,0.15));
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .roast-btn:hover::after { opacity: 1; }
-    .roast-btn:hover { transform: scale(1.02); }
-    .roast-btn:active { transform: scale(0.98); }
-    .roast-btn:disabled { background: #222; color: #444; cursor: not-allowed; transform: none; }
-
-    /* LOADING */
-    .loading-wrap {
-      display: none;
-      text-align: center;
-      padding: 48px 0;
-    }
-
-    .loading-icon {
-      font-size: 3rem;
-      animation: spin-bounce 1s infinite;
-      margin-bottom: 16px;
-    }
-
-    @keyframes spin-bounce {
-      0% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(10deg) scale(1.1); }
-      75% { transform: rotate(-10deg) scale(0.9); }
-      100% { transform: rotate(0deg) scale(1); }
-    }
-
-    .loading-text {
-      font-family: 'Bangers', cursive;
-      font-size: 1.5rem;
-      color: var(--orange);
-      letter-spacing: 1px;
-    }
-
-    .loading-sub {
-      font-size: 0.8rem;
-      color: #444;
-      margin-top: 6px;
-    }
-
-    /* ERROR */
-    .error-msg {
-      display: none;
-      background: rgba(255,45,45,0.1);
-      border: 1px solid rgba(255,45,45,0.3);
-      border-radius: 10px;
-      padding: 14px 18px;
-      color: var(--red);
-      font-size: 14px;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    /* ROAST CARD */
-    .roast-card {
-      display: none;
-      border: 1.5px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      animation: slideUp 0.4s ease;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card-header {
-      background: linear-gradient(135deg, #1a0505, #150a00);
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .card-title-wrap { display: flex; align-items: center; gap: 10px; }
-
-    .skull { font-size: 1.5rem; }
-
-    .card-title {
-      font-family: 'Bangers', cursive;
-      font-size: 1.5rem;
-      letter-spacing: 1px;
-      color: #fff;
-    }
-
-    .degen-badge {
-      background: linear-gradient(135deg, var(--red), var(--orange));
-      color: #fff;
-      font-family: 'Bangers', cursive;
-      font-size: 1.1rem;
-      letter-spacing: 1px;
-      padding: 6px 16px;
-      border-radius: 99px;
-      white-space: nowrap;
-    }
-
-    /* Degen score meter */
-    .meter-wrap {
-      padding: 16px 24px 0;
-      background: var(--card);
-    }
-    .meter-label {
-      font-size: 11px;
-      color: #444;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 6px;
-    }
-    .meter-bar-bg {
-      height: 6px;
-      background: #1a1a1a;
-      border-radius: 3px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .meter-bar-fill {
-      height: 100%;
-      border-radius: 3px;
-      background: linear-gradient(90deg, #ffd600, #ff6b00, #ff2d2d);
-      transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-      width: 0%;
-    }
-
-    .card-body {
-      background: var(--card);
-      padding: 0 24px 20px;
-    }
-
-    .roast-line {
-      border-left: 3px solid var(--red);
-      padding: 12px 16px;
-      margin-bottom: 12px;
-      font-size: 14px;
-      color: #bbb;
-      line-height: 1.7;
-      border-radius: 0 8px 8px 0;
-      background: rgba(255,45,45,0.04);
-      position: relative;
-    }
-
-    .roast-line .roast-icon {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      font-size: 1rem;
-      opacity: 0.5;
-    }
-
-    .verdict-wrap {
-      background: linear-gradient(135deg, rgba(255,45,45,0.12), rgba(255,107,0,0.08));
-      border: 1px solid rgba(255,45,45,0.2);
-      border-radius: 10px;
-      padding: 16px 18px;
-      margin-bottom: 16px;
-    }
-
-    .verdict-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--orange);
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      margin-bottom: 6px;
-    }
-
-    .verdict-text {
-      font-size: 14px;
-      color: #ddd;
-      line-height: 1.6;
-      font-style: italic;
-    }
-
-    .share-btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      border: 1.5px solid #222;
-      background: transparent;
-      color: #666;
-      font-size: 13px;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .share-btn:hover {
-      border-color: #1da1f2;
-      color: #1da1f2;
-      background: rgba(29,161,242,0.05);
-    }
-
-    /* FOOTER BADGES */
-    .footer-badges {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 40px;
-      flex-wrap: wrap;
-    }
-
-    .badge {
-      font-size: 11px;
-      color: #333;
-      border: 1px solid #1a1a1a;
-      padding: 5px 12px;
-      border-radius: 99px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .roast-icons { display: flex; gap: 8px; margin-bottom: 16px; }
-    .roast-icon-num {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      background: rgba(255,45,45,0.15);
-      color: var(--red);
-      font-size: 11px;
-      font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .loading-msgs { display: none; }
+    body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+    .warning-banner { background: repeating-linear-gradient(45deg, #ff2d2d, #ff2d2d 10px, #ff6b00 10px, #ff6b00 20px); width: 100%; max-width: 600px; padding: 8px; text-align: center; font-weight: 700; font-size: 13px; color: #000; margin-bottom: 24px; border-radius: 4px; }
+    h1 { font-family: 'Bangers', cursive; font-size: 5rem; background: linear-gradient(135deg, #ff2d2d, #ff6b00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 4px; margin-bottom: 8px; }
+    .subtitle { color: #888; margin-bottom: 32px; font-size: 0.95rem; }
+    .wallet-btn { padding: 12px 24px; border-radius: 8px; border: 2px solid #ff6b00; background: transparent; color: #ff6b00; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 16px; transition: all 0.2s; }
+    .wallet-btn:hover { background: #ff6b00; color: #000; }
+    .wallet-btn.connected { border-color: #00ff88; color: #00ff88; font-size: 12px; }
+    .input-row { display: flex; gap: 10px; width: 100%; max-width: 560px; margin-bottom: 32px; }
+    input { flex: 1; padding: 12px 16px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; font-size: 14px; }
+    input::placeholder { color: #555; }
+    button.roast-btn { padding: 12px 24px; border-radius: 8px; border: none; background: #e84040; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+    button.roast-btn:hover { background: #c93333; }
+    button.roast-btn:disabled { background: #555; cursor: not-allowed; }
+    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; width: 100%; max-width: 560px; overflow: hidden; display: none; }
+    .card-header { background: #111; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; }
+    .card-title { font-size: 1rem; font-weight: 600; }
+    .score-bar-wrap { width: 100%; max-width: 560px; display: none; margin-bottom: 16px; }
+    .score-label { font-size: 13px; color: #888; margin-bottom: 6px; }
+    .score-bar-bg { background: #222; border-radius: 99px; height: 10px; }
+    .score-bar-fill { height: 10px; border-radius: 99px; background: linear-gradient(90deg, #ff2d2d, #ff6b00); width: 0%; transition: width 1.2s ease; }
+    .score-badge { display: inline-block; background: #e84040; color: #fff; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 99px; }
+    .card-body { padding: 20px; }
+    .roast-line { border-left: 3px solid #e84040; padding: 8px 12px; margin-bottom: 10px; font-size: 14px; color: #ccc; line-height: 1.6; }
+    .verdict { background: #1f0f0f; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #e84040; font-weight: 500; margin-top: 4px; }
+    .share-btn { width: 100%; margin-top: 16px; padding: 10px; border-radius: 8px; border: 1px solid #333; background: transparent; color: #aaa; font-size: 13px; cursor: pointer; }
+    .share-btn:hover { background: #222; }
+    .error { color: #e84040; font-size: 14px; margin-top: 12px; }
+    .loading { color: #888; font-size: 14px; margin-top: 12px; }
+    .tx-badge { background: #0a2a1a; border: 1px solid #00ff88; color: #00ff88; font-size: 11px; padding: 4px 10px; border-radius: 99px; margin-bottom: 12px; display: none; }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="warning-banner">⚠️ WARNING: BRUTAL HONESTY AHEAD ⚠️</div>
+  <h1>CRYPTO ROAST</h1>
+  <p class="subtitle">Your on-chain history. Judged. Ruthlessly.</p>
 
-    <div class="hero">
-      <div class="flame-row">🔥💀🔥</div>
-      <h1>CRYPTO<br>ROAST</h1>
-      <p class="tagline">AI-powered <span>brutality</span> for your degen portfolio</p>
+  <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">🦊 Connect MetaMask</button>
+
+  <div class="input-row">
+    <input type="text" id="wallet" placeholder="0x... or connect MetaMask above" />
+    <button class="roast-btn" id="roastBtn" onclick="getRoast()">Roast Me 🔥</button>
+  </div>
+
+  <p class="loading" id="loading" style="display:none">🔥 Analyzing your terrible decisions...</p>
+  <p class="error" id="error" style="display:none"></p>
+  <div class="tx-badge" id="txBadge">✅ Real on-chain data loaded</div>
+
+  <div class="score-bar-wrap" id="scoreWrap">
+    <div class="score-label">Degen Score</div>
+    <div class="score-bar-bg"><div class="score-bar-fill" id="scoreFill"></div></div>
+  </div>
+
+  <div class="card" id="card">
+    <div class="card-header">
+      <span class="card-title" id="cardTitle"></span>
+      <span class="score-badge" id="score"></span>
     </div>
-
-    <div class="warning-banner">
-      <div class="warning-inner">⚠ Warning: May cause financial regret awareness ⚠</div>
+    <div class="card-body">
+      <div id="roasts"></div>
+      <div class="verdict" id="verdict"></div>
+      <button class="share-btn" onclick="shareOnX()">🐦 Share my roast on X</button>
     </div>
-
-    <div class="input-section">
-      <div class="input-label">Your Mantle Wallet Address</div>
-      <div class="input-wrap">
-        <input type="text" id="wallet" placeholder="0x... paste your address and prepare to suffer" />
-        <button class="roast-btn" id="roastBtn" onclick="getRoast()">🔥 ROAST ME</button>
-      </div>
-    </div>
-
-    <div class="error-msg" id="error"></div>
-
-    <div class="loading-wrap" id="loading">
-      <div class="loading-icon">🕵️</div>
-      <div class="loading-text" id="loadingText">ANALYZING YOUR MISTAKES...</div>
-      <div class="loading-sub" id="loadingSub">Consulting the blockchain gods of regret</div>
-    </div>
-
-    <div class="roast-card" id="card">
-      <div class="card-header">
-        <div class="card-title-wrap">
-          <span class="skull">💀</span>
-          <span class="card-title" id="cardTitle"></span>
-        </div>
-        <div class="degen-badge" id="degenBadge"></div>
-      </div>
-      <div class="meter-wrap">
-        <div class="meter-label">Degen Level</div>
-        <div class="meter-bar-bg">
-          <div class="meter-bar-fill" id="meterFill"></div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="roasts"></div>
-        <div class="verdict-wrap">
-          <div class="verdict-label">Final Verdict 🏴</div>
-          <div class="verdict-text" id="verdict"></div>
-        </div>
-        <button class="share-btn" onclick="shareOnX()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          Share my roast on X
-        </button>
-      </div>
-    </div>
-
-    <div class="footer-badges">
-      <span class="badge">⛓ Mantle Network</span>
-      <span class="badge">🤖 AI Powered</span>
-      <span class="badge">🏆 Turing Test Hackathon 2026</span>
-    </div>
-
   </div>
 
   <script>
-    const loadingLines = [
-      ["ANALYZING YOUR MISTAKES...", "Consulting the blockchain gods of regret"],
-      ["COUNTING YOUR L'S...", "There are so many. Please hold."],
-      ["READING YOUR TRANSACTIONS...", "Our AI is in shock. Give it a moment."],
-      ["PREPARING THE ROAST...", "Sharpening the knife of financial truth"],
-    ];
-
-    let loadingInterval;
+    async function connectWallet() {
+      if (typeof window.ethereum === 'undefined') {
+        alert('MetaMask not found! Please install MetaMask extension.');
+        return;
+      }
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const account = accounts[0];
+        document.getElementById('wallet').value = account;
+        const btn = document.getElementById('connectBtn');
+        btn.textContent = '✅ ' + account.slice(0,6) + '...' + account.slice(-4);
+        btn.classList.add('connected');
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
     async function getRoast() {
       const wallet = document.getElementById('wallet').value.trim();
-      if (!wallet) { showError('Paste a wallet address first, anon!'); return; }
+      if (!wallet) { showError('Please enter a wallet address!'); return; }
 
       const btn = document.getElementById('roastBtn');
       btn.disabled = true;
-      btn.textContent = '⏳ Roasting...';
-
+      btn.textContent = 'Roasting...';
       document.getElementById('loading').style.display = 'block';
       document.getElementById('error').style.display = 'none';
       document.getElementById('card').style.display = 'none';
-
-      let i = 0;
-      loadingInterval = setInterval(() => {
-        i = (i + 1) % loadingLines.length;
-        document.getElementById('loadingText').textContent = loadingLines[i][0];
-        document.getElementById('loadingSub').textContent = loadingLines[i][1];
-      }, 1800);
+      document.getElementById('scoreWrap').style.display = 'none';
+      document.getElementById('txBadge').style.display = 'none';
 
       try {
         const res = await fetch('/roast', {
@@ -511,36 +112,27 @@
         if (data.error) { showError(data.error); return; }
         showRoast(data);
       } catch (e) {
-        showError('The roast machine broke. Even it gave up on your portfolio.');
+        showError('Something went wrong. Try again!');
       } finally {
         btn.disabled = false;
-        btn.textContent = '🔥 ROAST ME';
-        clearInterval(loadingInterval);
+        btn.textContent = 'Roast Me 🔥';
         document.getElementById('loading').style.display = 'none';
       }
     }
 
-    const roastIcons = ['💸', '📉', '🤡', '🪦'];
-
     function showRoast(data) {
       document.getElementById('cardTitle').textContent = data.title;
-      document.getElementById('degenBadge').textContent = 'Degen Score: ' + data.degen_score;
+      document.getElementById('score').textContent = 'Degen Score: ' + data.degen_score + '/100';
       document.getElementById('verdict').textContent = data.verdict;
-
-      setTimeout(() => {
-        document.getElementById('meterFill').style.width = data.degen_score + '%';
-      }, 200);
-
       const roastsEl = document.getElementById('roasts');
-      roastsEl.innerHTML = data.roasts.map((r, i) => `
-        <div class="roast-line">
-          ${r}
-          <span class="roast-icon">${roastIcons[i] || '🔥'}</span>
-        </div>
-      `).join('');
-
+      const emojis = ['💀', '😂', '🪦', '🤡'];
+      roastsEl.innerHTML = data.roasts.map((r, i) => `<div class="roast-line">${emojis[i]} ${r}</div>`).join('');
       document.getElementById('card').style.display = 'block';
-      document.getElementById('card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      document.getElementById('scoreWrap').style.display = 'block';
+      document.getElementById('txBadge').style.display = 'inline-block';
+      setTimeout(() => {
+        document.getElementById('scoreFill').style.width = data.degen_score + '%';
+      }, 100);
     }
 
     function showError(msg) {
@@ -551,10 +143,9 @@
     }
 
     function shareOnX() {
-      const title = document.getElementById('cardTitle').textContent;
-      const score = document.getElementById('degenBadge').textContent;
+      const score = document.getElementById('score').textContent;
       const verdict = document.getElementById('verdict').textContent;
-      const text = `Just got AI-roasted for my crypto trades 💀\n"${title}" — ${score}\n\n"${verdict}"\n\nGet roasted: #CryptoRoast #TuringTestHackathon #Mantle`;
+      const text = `I just got roasted by AI for my crypto trades! ${score}. "${verdict}" Try it: https://crypto-roast-rho.vercel.app #CryptoRoast #TuringTestHackathon #Mantle`;
       window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text));
     }
 
