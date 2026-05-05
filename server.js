@@ -80,7 +80,7 @@ app.post('/roast', async (req, res) => {
       'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
     },
     body: JSON.stringify({
-      model: 'llama3-8b-8192',
+      model: 'groq/compound',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: 'Real wallet data:\n' + txSummary }
