@@ -68,6 +68,10 @@
       <div id="roasts"></div>
       <div class="verdict" id="verdict"></div>
       <button class="share-btn" onclick="shareOnX()">🐦 Share my roast on X</button>
+<button class="share-btn" id="memeBtn" onclick="generateMeme()" style="margin-top:8px; border-color:#ff6b00; color:#ff6b00;">🎨 Generate Meme Card</button>
+<canvas id="memeCanvas" style="display:none;"></canvas>
+<img id="memeImage" style="width:100%; border-radius:8px; margin-top:12px; display:none;" />
+<a id="memeDownload" style="display:none;"></a>
     </div>
   </div>
 
@@ -152,6 +156,115 @@
     document.getElementById('wallet').addEventListener('keypress', e => {
       if (e.key === 'Enter') getRoast();
     });
+    function generateMeme() {
+  const canvas = document.getElementById('memeCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 800;
+  canvas.height = 450;
+
+  // Background
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, 800, 450);
+
+  // Warning stripes at top
+  const stripeWidth = 30;
+  for (let i = 0; i < 800; i += stripeWidth * 2) {
+    ctx.fillStyle = '#ff2d2d';
+    ctx.fillRect(i, 0, stripeWidth, 18);
+    ctx.fillStyle = '#ff6b00';
+    ctx.fillRect(i + stripeWidth, 0, stripeWidth, 18);
+  }
+
+  // Title
+  ctx.font = 'bold 52px Arial Black';
+  ctx.fillStyle = '#ff2d2d';
+  ctx.textAlign = 'center';
+  ctx.fillText('CRYPTO ROAST', 400, 80);
+
+  // Degen score badge
+  const score = document.getElementById('score').textContent;
+  ctx.fillStyle = '#e84040';
+  ctx.beginPath();
+  ctx.roundRect(280, 95, 240, 40, 20);
+  ctx.fill();
+  ctx.font = 'bold 18px Arial';
+  ctx.fillStyle = '#fff';
+  ctx.fillText(score, 400, 122);
+
+  // Title
+  const title = document.getElementById('cardTitle').textContent;
+  ctx.font = 'bold 28px Arial';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(title, 400, 175);
+
+  // Roast lines
+  const roastLines = document.querySelectorAll('.roast-line');
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#cccccc';
+  ctx.textAlign = 'left';
+  
+  let y = 210;
+  if (roastLines.length > 0) {
+    const firstRoast = roastLines[0].textContent;
+    const words = firstRoast.split(' ');
+    let line = '';
+    for (let w of words) {
+      const test = line + w + ' ';
+      if (ctx.measureText(test).width > 680 && line !== '') {
+        ctx.fillText(line, 60, y);
+        line = w + ' ';
+        y += 24;
+      } else {
+        line = test;
+      }
+    }
+    ctx.fillText(line, 60, y);
+    y += 32;
+  }
+
+  // Verdict
+  const verdict = document.getElementById('verdict').textContent;
+  ctx.fillStyle = '#e84040';
+  ctx.font = 'italic 15px Arial';
+  ctx.textAlign = 'center';
+  // Word wrap verdict
+  const vwords = verdict.split(' ');
+  let vline = '';
+  let vy = y + 20;
+  for (let w of vwords) {
+    const test = vline + w + ' ';
+    if (ctx.measureText(test).width > 680 && vline !== '') {
+      ctx.fillText(vline, 400, vy);
+      vline = w + ' ';
+      vy += 22;
+    } else {
+      vline = test;
+    }
+  }
+  ctx.fillText(vline, 400, vy);
+
+  // Bottom branding
+  ctx.fillStyle = '#333';
+  ctx.fillRect(0, 400, 800, 50);
+  ctx.font = '14px Arial';
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'left';
+  ctx.fillText('crypto-roast-rho.vercel.app', 30, 430);
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#ff6b00';
+  ctx.fillText('#TuringTestHackathon #Mantle', 770, 430);
+
+  // Show image
+  const img = document.getElementById('memeImage');
+  img.src = canvas.toDataURL('image/png');
+  img.style.display = 'block';
+
+  // Auto download
+  const link = document.getElementById('memeDownload');
+  link.href = canvas.toDataURL('image/png');
+  link.download = 'crypto-roast-' + Date.now() + '.png';
+  link.click();
+}
   </script>
 </body>
 </html>
