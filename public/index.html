@@ -68,12 +68,22 @@
       <div id="roasts"></div>
       <div class="verdict" id="verdict"></div>
       <button class="share-btn" onclick="shareOnX()">🐦 Share my roast on X</button>
+      <button class="share-btn" onclick="showHall()" style="margin-top:8px; border-color:#FFD700; color:#FFD700;">🏆 Hall of Shame Leaderboard</button>
       <button class="share-btn" id="memeBtn" onclick="generateMeme()" style="margin-top:8px; border-color:#ff6b00; color:#ff6b00;">🎨 Generate Meme Card</button>
       <canvas id="memeCanvas" style="display:none;"></canvas>
       <img id="memeImage" style="width:100%; border-radius:8px; margin-top:12px; display:none;" />
       <a id="memeDownload" style="display:none;"></a>
     </div>
   </div>
+  <div id="hallSection" style="display:none; width:100%; max-width:560px; margin-top:24px;">
+  <div style="background:#1a1a1a; border:2px solid #FFD700; border-radius:12px; overflow:hidden;">
+    <div style="background:#111; padding:16px 20px; border-bottom:1px solid #333; text-align:center;">
+      <span style="font-family:'Bangers',cursive; font-size:1.8rem; color:#FFD700; letter-spacing:2px;">🏆 HALL OF SHAME 🏆</span>
+      <p style="color:#888; font-size:12px; margin:4px 0 0;">Top 10 Most Degenerate Wallets</p>
+    </div>
+    <div id="hallList" style="padding:12px;"></div>
+  </div>
+</div>
 
   <script>
     async function connectWallet() {
@@ -286,22 +296,21 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   ctx.beginPath(); ctx.moveTo(1048, 295); ctx.lineTo(1010, 330); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(1172, 295); ctx.lineTo(1195, 330); ctx.stroke();
 
-  // === MAIN CENTER CARD ===
-  // Card shadow
+  
   ctx.fillStyle = '#ff2d2d';
   ctx.fillRect(208, 48, 790, 540);
-  // Card background  
+   
   ctx.fillStyle = '#1a1a1a';
   ctx.fillRect(200, 40, 790, 540);
-  // Card border
+
   ctx.strokeStyle = '#FFD700';
   ctx.lineWidth = 4;
   ctx.strokeRect(200, 40, 790, 540);
 
-  // === HEADER STRIPE ===
+  
   ctx.fillStyle = '#ff2d2d';
   ctx.fillRect(200, 40, 790, 70);
-  // Diagonal stripe pattern
+  
   ctx.strokeStyle = '#cc0000';
   ctx.lineWidth = 8;
   for(let i = 200; i < 990; i += 30) {
@@ -311,17 +320,17 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.stroke();
   }
 
-  // CRYPTO ROAST title
+  
   ctx.fillStyle = '#FFD700';
   ctx.font = '900 52px Arial Black';
   ctx.textAlign = 'center';
-  // Text shadow
+ 
   ctx.shadowColor = '#ff2d2d';
   ctx.shadowBlur = 10;
   ctx.fillText('🔥 CRYPTO ROAST 🔥', 595, 94);
   ctx.shadowBlur = 0;
 
-  // === DEGEN SCORE BADGE ===
+  
   ctx.fillStyle = '#FFD700';
   roundRect(ctx, 420, 118, 360, 48, 24); ctx.fill();
   ctx.strokeStyle = '#ff2d2d';
@@ -333,14 +342,14 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   ctx.textAlign = 'center';
   ctx.fillText('⚡ ' + score.toUpperCase() + ' ⚡', 600, 150);
 
-  // === ROAST TITLE ===
+  
   const title = document.getElementById('cardTitle').textContent;
   ctx.fillStyle = '#ffffff';
   ctx.font = '900 34px Arial Black';
   ctx.textAlign = 'center';
   ctx.fillText('"' + title + '"', 595, 210);
 
-  // Zigzag divider
+
   ctx.strokeStyle = '#ff2d2d';
   ctx.lineWidth = 3;
   ctx.beginPath();
@@ -361,7 +370,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 
   roastLines.forEach((line, i) => {
     if (i >= 2) return;
-    // Left accent bar
+  
     ctx.fillStyle = '#ff2d2d';
     ctx.fillRect(218, y - 18, 5, 50);
     ctx.font = 'bold 15px Arial';
@@ -377,7 +386,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   ctx.strokeStyle = '#ff6b00';
   ctx.lineWidth = 3;
   roundRect(ctx, 218, y, 754, 85, 10); ctx.stroke();
-  // Verdict label
+ 
   ctx.fillStyle = '#ff6b00';
   ctx.font = 'bold 13px Arial Black';
   ctx.textAlign = 'left';
@@ -387,7 +396,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   const verdict = document.getElementById('verdict').textContent;
   wrapText(ctx, verdict, 235, y + 45, 720, 22);
 
-  // === BOTTOM BAR ===
+ 
   ctx.fillStyle = '#111111';
   ctx.fillRect(200, 538, 790, 42);
   ctx.strokeStyle = '#FFD700';
@@ -410,8 +419,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   ctx.fillStyle = '#ff6b00';
   ctx.fillText('#TuringTestHackathon #Mantle #CryptoRoast', 975, 572);
 
-  // === BOTTOM DECORATIONS ===
-  // Rocket bottom left
+ 
   ctx.font = '36px Arial';
   ctx.textAlign = 'left';
   ctx.fillText('🚀', 35, 580);

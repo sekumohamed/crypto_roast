@@ -1,4 +1,29 @@
 require('dotenv').config();
+const fs = require('fs');
+const HALL_OF_SHAME_FILE = 'hall_of_shame.json';
+
+function loadHall() {
+  try {
+    if (fs.existsSync(HALL_OF_SHAME_FILE)) {
+      return JSON.parse(fs.readFileSync(HALL_OF_SHAME_FILE));
+    }
+  } catch(e) {}
+  return [];
+}
+
+function saveToHall(wallet, title, degenScore, verdict) {
+  const hall = loadHall();
+  const existing = hall.findIndex(r => r.wallet === wallet);
+  const entry = { wallet, title, degenScore, verdict, date: new Date().toLocaleDateString() };
+  if (existing >= 0) {
+    if (degenScore > hall[existing].degenScore) hall[existing] = entry;
+  } else {
+    hall.push(entry);
+  }
+  hall.sort((a, b) => b.degenScore - a.degenScore);
+  const top50 = hall.slice(0, 50);
+  fs.writeFileSync(HALL_OF_SHAME_FILE, JSON.stringify(top50, null, 2));
+}
 const express = require('express');
 const app = express();
 
@@ -70,10 +95,14 @@ app.post('/roast', async (req, res) => {
     const clean = text.replace(/```json|```/g, '').trim();
     const roast = JSON.parse(clean);
     res.json(roast);
+    saveToHall(wallet, roast.title, roast.degen_score, roast.verdict);
   } catch (err) {
     console.error('Error:', err);
     res.status(500).json({ error: 'Roast failed. Try again!' });
   }
 });
-
+app.get('/hall', (req, res) => {
+  const hall = loadHall();
+  res.json(hall.slice(0, 10));
+});
 app.listen(3000, () => console.log('Crypto Roast running at http://localhost:3000'));
