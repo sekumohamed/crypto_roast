@@ -76,21 +76,26 @@ app.post('/roast', async (req, res) => {
     const roast = JSON.parse(clean);
 
     // Save to Supabase
-    const { data: existing } = await supabase
-  .from('roasts')
-  .select('degen_score')
-  .eq('wallet', wallet)
-  .single();
+        const weekNumber = new Date().toISOString().slice(0, 10).replace(/-/g, '').slice(0, 6);
+        const week = `${new Date().getFullYear()}-W${Math.ceil(new Date().getDate() / 7)}`;
 
-if (!existing || roast.degen_score > existing.degen_score) {
-  await supabase.from('roasts').upsert({
-    wallet,
-    title: roast.title,
-    degen_score: roast.degen_score,
-    verdict: roast.verdict
-  }, { onConflict: 'wallet' });
-}
-    res.json(roast);
+        const { data: existing } = await supabase
+          .from('roasts')
+          .select('degen_score, roast_count')
+          .eq('wallet', wallet)
+          .eq('week_number', week)
+          .single();
+
+        await supabase.from('roasts').upsert({
+          wallet,
+          title: roast.title,
+          degen_score: existing ? Math.max(roast.degen_score, existing.degen_score) : roast.degen_score,
+          verdict: roast.verdict,
+          roast_count: existing ? (existing.roast_count || 1) + 1 : 1,
+          week_number: week
+        }, { onConflict: 'wallet, week_number' });
+
+        res.json(roast);
   } catch (err) {
     console.error('Error:', err);
     res.status(500).json({ error: 'Roast failed. Try again!' });
@@ -98,9 +103,11 @@ if (!existing || roast.degen_score > existing.degen_score) {
 });
 
 app.get('/hall', async (req, res) => {
+  const week = `${new Date().getFullYear()}-W${Math.ceil(new Date().getDate() / 7)}`;
   const { data, error } = await supabase
     .from('roasts')
     .select('*')
+    .eq('week_number', week)
     .order('degen_score', { ascending: false })
     .limit(10);
   if (error) return res.status(500).json({ error: 'Failed to load hall' });

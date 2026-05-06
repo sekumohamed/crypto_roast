@@ -67,7 +67,7 @@
     <div class="card-body">
       <div id="roasts"></div>
       <div class="verdict" id="verdict"></div>
-      <button class="share-btn" onclick="shareOnX()">🐦 Share my roast on X</button>
+      <button class="share-btn" onclick="shareOnX()">Share my roast on X</button>
       <button class="share-btn" onclick="showHall()" style="margin-top:8px; border-color:#FFD700; color:#FFD700;">🏆 Hall of Shame Leaderboard</button>
       <button class="share-btn" id="memeBtn" onclick="generateMeme()" style="margin-top:8px; border-color:#ff6b00; color:#ff6b00;">🎨 Generate Meme Card</button>
       <canvas id="memeCanvas" style="display:none;"></canvas>
@@ -80,7 +80,7 @@
   <div style="background:#1a1a1a; border:2px solid #FFD700; border-radius:12px; overflow:hidden;">
     <div style="background:#111; padding:16px 20px; border-bottom:1px solid #333; text-align:center;">
       <span style="font-family:'Bangers',cursive; font-size:1.8rem; color:#FFD700; letter-spacing:2px;">🏆 HALL OF SHAME 🏆</span>
-      <p style="color:#888; font-size:12px; margin:4px 0 0;">Top 10 Most Degenerate Wallets</p>
+      <p style="color:#888; font-size:12px; margin:4px 0 0;">Top 10 This Week — Resets Every Monday</p>
     </div>
     <div id="hallList" style="padding:12px;"></div>
   </div>
@@ -491,8 +491,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
         getRoast();
       }
     });
-
-
   </script>
 </body>
 </html>
