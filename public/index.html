@@ -42,7 +42,7 @@
   <div class="warning-banner">⚠️ WARNING: BRUTAL HONESTY AHEAD ⚠️</div>
   <h1>CRYPTO ROAST</h1>
   <p class="subtitle">Your on-chain history. Judged. Ruthlessly.</p>
-  <p id="statsCounter" style="color:#ff6b00; font-size:13px; margin-top:8px; text-align:center; letter-spacing:0.5px; font-weight:600;">🔥 Loading...</p>
+  <p id="statsCounter" style="color:#ff6b00; font-size:13px; margin-top:8px; margin-bottom:20px; text-align:center; letter-spacing:0.5px; font-weight:600;">🔥 Loading...</p>
 
   <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">🦊 Connect MetaMask</button>
 
@@ -326,7 +326,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.stroke();
   }
 
-  
   ctx.fillStyle = '#FFD700';
   ctx.font = '900 52px Arial Black';
   ctx.textAlign = 'center';
@@ -354,7 +353,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   ctx.font = '900 34px Arial Black';
   ctx.textAlign = 'center';
   ctx.fillText('"' + title + '"', 595, 210);
-
 
   ctx.strokeStyle = '#ff2d2d';
   ctx.lineWidth = 3;
@@ -473,7 +471,8 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
         </div>
         <div style="text-align:right;">
           <div style="background:#e84040; color:white; font-size:12px; font-weight:700; padding:3px 10px; border-radius:99px;">${entry.degen_score}/100</div>
-<div style="font-size:11px; color:#555; margin-top:3px;">${new Date(entry.created_at).toLocaleDateString()}</div>
+          <div style="font-size:11px; color:#555; margin-top:3px;">${new Date(entry.created_at).toLocaleDateString()}</div>
+          <div style="font-size:11px; color:#ff6b00; cursor:pointer; margin-top:2px;" onclick="showHistory('${entry.wallet}')"> View history </div>
         </div>
       </div>
     `).join('');
@@ -536,6 +535,11 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     btn.disabled = false;
   }
 }
+    async function showHistory(wallet) {
+      const res = await fetch(`/history/${wallet}`);
+      const data = await res.json();
+      alert(`📜 ${wallet.slice(0,6)}...${wallet.slice(-4)} roasted ${data.length} time(s)!\nBest score: ${Math.max(...data.map(d => d.degen_score))}/100`);
+    }
   </script>
   <div id="battleSection" style="width:100%; max-width:560px; margin-top:32px;">
   <div style="background:#1a1a1a; border:2px solid #ff2d2d; border-radius:12px; overflow:hidden;">

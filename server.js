@@ -227,4 +227,15 @@ Respond ONLY in this JSON format:
   }
 });
 
+app.get('/history/:wallet', async (req, res) => {
+  const { wallet } = req.params;
+  const { data, error } = await supabase
+    .from('roasts')
+    .select('*')
+    .eq('wallet', wallet)
+    .order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: 'Failed' });
+  res.json(data || []);
+});
+
 app.listen(3000, () => console.log('Crypto Roast running at http://localhost:3000'));
