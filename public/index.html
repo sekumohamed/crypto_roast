@@ -73,6 +73,7 @@
       <canvas id="memeCanvas" style="display:none;"></canvas>
       <img id="memeImage" style="width:100%; border-radius:8px; margin-top:12px; display:none;" />
       <a id="memeDownload" style="display:none;"></a>
+      <button class="share-btn" onclick="roastFriend()" style="margin-top:8px; border-color:#ff2d2d; color:#ff2d2d;">🔥 Roast a Friend</button>
     </div>
   </div>
   <div id="hallSection" style="display:none; width:100%; max-width:560px; margin-top:24px;">
@@ -474,7 +475,24 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   } catch(e) {
     list.innerHTML = '<p style="color:#e84040; text-align:center; padding:20px;">Failed to load!</p>';
   }
-}
+} 
+  function roastFriend() {
+      const wallet = document.getElementById('wallet').value;
+      const link = window.location.origin + '/?wallet=' + wallet;
+      navigator.clipboard.writeText(link);
+      alert('🔥 Link copied! Send it to your friend — they\'ll get auto-roasted when they open it!');
+    }
+
+    window.addEventListener('load', () => {
+      const params = new URLSearchParams(window.location.search);
+      const wallet = params.get('wallet');
+      if (wallet) {
+        document.getElementById('wallet').value = wallet;
+        getRoast();
+      }
+    });
+
+
   </script>
 </body>
 </html>
