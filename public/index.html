@@ -466,8 +466,8 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
           <div style="font-size:11px; color:#555; font-family:monospace;">${entry.wallet.slice(0,6)}...${entry.wallet.slice(-4)}</div>
         </div>
         <div style="text-align:right;">
-          <div style="background:#e84040; color:white; font-size:12px; font-weight:700; padding:3px 10px; border-radius:99px;">${entry.degenScore}/100</div>
-          <div style="font-size:11px; color:#555; margin-top:3px;">${entry.date}</div>
+          <div style="background:#e84040; color:white; font-size:12px; font-weight:700; padding:3px 10px; border-radius:99px;">${entry.degen_score}/100</div>
+<div style="font-size:11px; color:#555; margin-top:3px;">${new Date(entry.created_at).toLocaleDateString()}</div>
         </div>
       </div>
     `).join('');
