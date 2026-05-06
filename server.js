@@ -83,6 +83,8 @@ app.post('/roast', async (req, res) => {
           const week = Math.ceil((((now - start) / 86400000) + start.getDay() + 1) / 7);
           return `${now.getFullYear()}-W${String(week).padStart(2, '0')}`;
       }
+
+
       const week = getCurrentWeek();
 
         const { data: existing } = await supabase
@@ -109,7 +111,14 @@ app.post('/roast', async (req, res) => {
 });
 
 app.get('/hall', async (req, res) => {
-  const week = `${new Date().getFullYear()}-W${Math.ceil(new Date().getDate() / 7)}`;
+  function getCurrentWeek() {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 1);
+    const week = Math.ceil((((now - start) / 86400000) + start.getDay() + 1) / 7);
+    return `${now.getFullYear()}-W${String(week).padStart(2, '0')}`;
+  }
+  const week = getCurrentWeek();
+  console.log('Hall week:', week);
   const { data, error } = await supabase
     .from('roasts')
     .select('*')
@@ -117,7 +126,7 @@ app.get('/hall', async (req, res) => {
     .order('degen_score', { ascending: false })
     .limit(10);
   if (error) return res.status(500).json({ error: 'Failed to load hall' });
-  res.json(data);
+  res.json(data || []);
 });
 
 app.get('/stats', async (req, res) => {
