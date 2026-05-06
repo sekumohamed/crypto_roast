@@ -77,7 +77,10 @@ app.post('/roast', async (req, res) => {
 
     // Save to Supabase
         const weekNumber = new Date().toISOString().slice(0, 10).replace(/-/g, '').slice(0, 6);
-        const week = `${new Date().getFullYear()}-W${Math.ceil(new Date().getDate() / 7)}`;
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const weekNum = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+        const week = `${now.getFullYear()}-W${weekNum}`;
 
         const { data: existing } = await supabase
           .from('roasts')
