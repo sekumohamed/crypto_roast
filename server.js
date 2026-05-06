@@ -11,15 +11,23 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY
 );
 
-const SYSTEM_PROMPT = `You are CryptoRoast, a brutally honest but hilarious AI comedian who specialises in roasting people's on-chain trading decisions.
+const SYSTEM_PROMPT = `You are CryptoRoast, a brutally honest but hilarious AI comedian roasting people's on-chain trading decisions.
 
-You will receive REAL transaction data from a Mantle wallet. Analyze it and roast the trader.
+You will receive REAL wallet data from Mantle Network. Analyze it and roast the trader.
 
 Rules:
-- Reference specific details from their actual transactions
+- Reference SPECIFIC details from their actual data
 - Use crypto slang: "aping in", "diamond hands", "paper hands", "rekt", "NGMI", "WAGMI"
 - Max 4 roast lines, each max 2 sentences
 - End with a savage but encouraging verdict
+
+DEGEN SCORE RULES (very important):
+- Empty wallet, no transactions = 15-25 (low but not zero — they're a crypto ghost)
+- 1-5 transactions, small amounts = 30-45
+- Active trader with some fails = 55-70
+- Many transactions, big amounts = 71-85
+- Reckless degen, many failed txs = 86-99
+- NEVER give exactly 0 or 100
 
 Respond ONLY in this exact JSON format:
 {
@@ -39,16 +47,40 @@ app.post('/roast', async (req, res) => {
     );
     const txData = await txResponse.json();
 
+    const tokenResponse = await fetch(
+      `https://api.routescan.io/v2/network/mainnet/evm/5000/address/${wallet}/erc20-transfers?limit=5`
+    );
+    const tokenData = await tokenResponse.json();
+
     let txSummary = `Wallet: ${wallet}\n`;
+    
     if (txData.items && txData.items.length > 0) {
-      txSummary += `Total transactions found: ${txData.items.length}\n`;
+      txSummary += `\nTRANSACTIONS (${txData.items.length} found):\n`;
       txData.items.slice(0, 5).forEach((tx, i) => {
         const value = (parseInt(tx.value || 0) / 1e18).toFixed(4);
-        txSummary += `TX${i+1}: ${value} MNT - ${tx.result === 'success' ? 'success' : 'failed'}\n`;
+        const age = Math.floor((Date.now() - new Date(tx.timestamp)) / 86400000);
+        txSummary += `TX${i+1}: ${value} MNT - ${tx.result || 'unknown'} - ${age} days ago\n`;
+      });
+      
+      const failed = txData.items.filter(tx => tx.result !== 'success').length;
+      const totalValue = txData.items.reduce((sum, tx) => sum + parseInt(tx.value || 0), 0) / 1e18;
+      txSummary += `Failed transactions: ${failed}/${txData.items.length}\n`;
+      txSummary += `Total MNT moved: ${totalValue.toFixed(4)}\n`;
+    } else 
+      {
+      txSummary += '\nTRANSACTIONS: None found - completely inactive wallet!\n';
+    }
+
+    if (tokenData.items && tokenData.items.length > 0) {
+      txSummary += `\nTOKEN ACTIVITY:\n`;
+      tokenData.items.slice(0, 3).forEach((t, i) => {
+        txSummary += `Token${i+1}: ${t.token?.symbol || 'Unknown'} - ${t.type || 'transfer'}\n`;
       });
     } else {
-      txSummary += 'No transactions found - wallet is brand new or empty!\n';
+      txSummary += '\nTOKEN ACTIVITY: No token interactions - pure ghost wallet!\n';
     }
+
+    txSummary += `\nROAST INSTRUCTIONS: Be specific about their actual behavior. Mock their inactivity, failed txs, or specific patterns. Make it personal and savage!\n`;
 
     const response = await fetch(
       'https://api.groq.com/openai/v1/chat/completions',
