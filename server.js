@@ -77,12 +77,13 @@ app.post('/roast', async (req, res) => {
 
     // Save to Supabase
         const weekNumber = new Date().toISOString().slice(0, 10).replace(/-/g, '').slice(0, 6);
-        const now = new Date();
-        const year = now.getFullYear();
-        const startOfYear = new Date(year, 0, 1);
-        const weekNum = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
-        const week = `${year}-W${String(weekNum).padStart(2, '0')}`;
-        console.log('Week value:', week);
+        function getCurrentWeek() {
+          const now = new Date();
+          const start = new Date(now.getFullYear(), 0, 1);
+          const week = Math.ceil((((now - start) / 86400000) + start.getDay() + 1) / 7);
+          return `${now.getFullYear()}-W${String(week).padStart(2, '0')}`;
+      }
+      const week = getCurrentWeek();
 
         const { data: existing } = await supabase
           .from('roasts')
