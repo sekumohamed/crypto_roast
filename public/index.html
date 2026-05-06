@@ -42,7 +42,7 @@
   <div class="warning-banner">⚠️ WARNING: BRUTAL HONESTY AHEAD ⚠️</div>
   <h1>CRYPTO ROAST</h1>
   <p class="subtitle">Your on-chain history. Judged. Ruthlessly.</p>
-  <p id="statsCounter" style="color:#ff6b00; font-size:13px; margin-top:8px;">🔥 Loading...</p>
+  <p id="statsCounter" style="color:#ff6b00; font-size:13px; margin-top:8px; text-align:center; letter-spacing:0.5px; font-weight:600;">🔥 Loading...</p>
 
   <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">🦊 Connect MetaMask</button>
 
@@ -92,8 +92,10 @@
       try {
         const res = await fetch('/stats');
         const data = await res.json();
+        const count = data.total || 0;
+        const label = count === 1 ? 'wallet' : 'wallets';
         document.getElementById('statsCounter').textContent = 
-          `🔥 ${data.total} wallets roasted so far — are you next?`;
+          ` ${count} ${label} roasted so far - are you next?`;
       } catch(e) {}
     }
     loadStats();
@@ -216,21 +218,18 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   canvas.width = 1200;
   canvas.height = 630;
 
-  // === BACKGROUND ===
+  
   ctx.fillStyle = '#0a0a0a';
   ctx.fillRect(0, 0, 1200, 630);
 
-  // Comic panel border - thick yellow
   ctx.strokeStyle = '#FFD700';
   ctx.lineWidth = 12;
   ctx.strokeRect(6, 6, 1188, 618);
 
-  // Inner border - red
   ctx.strokeStyle = '#ff2d2d';
   ctx.lineWidth = 4;
   ctx.strokeRect(18, 18, 1164, 594);
 
-  // === COMIC HALFTONE DOTS background ===
   ctx.fillStyle = '#111111';
   for(let x = 0; x < 1200; x += 20) {
     for(let y = 0; y < 630; y += 20) {
@@ -240,11 +239,9 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     }
   }
 
-  // === LEFT PANEL - crying figure ===
-  // Body
   ctx.fillStyle = '#FFD700';
   ctx.fillRect(30, 180, 120, 300);
-  // Head circle
+
   ctx.fillStyle = '#FFDAB9';
   ctx.beginPath();
   ctx.arc(90, 155, 45, 0, Math.PI * 2);
@@ -252,17 +249,15 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   ctx.strokeStyle = '#333';
   ctx.lineWidth = 3;
   ctx.stroke();
-  // Eyes X X (crying)
   ctx.fillStyle = '#333';
   ctx.font = 'bold 22px Arial';
   ctx.textAlign = 'center';
   ctx.fillText('😭', 90, 168);
-  // Arms down (disappointed)
   ctx.strokeStyle = '#FFD700';
   ctx.lineWidth = 10;
   ctx.beginPath(); ctx.moveTo(30, 220); ctx.lineTo(0, 310); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(150, 220); ctx.lineTo(180, 310); ctx.stroke();
-  // Speech bubble
+
   ctx.fillStyle = '#ffffff';
   roundRect(ctx, 25, 80, 140, 55, 10); ctx.fill();
   ctx.strokeStyle = '#333'; ctx.lineWidth = 2; 
@@ -272,36 +267,36 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   ctx.textAlign = 'center';
   ctx.fillText('WHY DID I', 95, 100);
   ctx.fillText('NOT SELL??', 95, 118);
-  // Bubble tail
+ 
   ctx.fillStyle = '#ffffff';
   ctx.beginPath();
   ctx.moveTo(80, 135); ctx.lineTo(90, 155); ctx.lineTo(100, 135);
   ctx.fill();
 
-  // === RIGHT PANEL - bear market bear ===
+
   ctx.fillStyle = '#8B4513';
-  // Bear body
+
   ctx.beginPath();
   ctx.arc(1110, 280, 70, 0, Math.PI * 2);
   ctx.fill();
   ctx.strokeStyle = '#5D2E0C';
   ctx.lineWidth = 3;
   ctx.stroke();
-  // Bear ears
+
   ctx.fillStyle = '#8B4513';
   ctx.beginPath(); ctx.arc(1075, 222, 22, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   ctx.beginPath(); ctx.arc(1145, 222, 22, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-  // Bear face
+ 
   ctx.font = '40px Arial';
   ctx.textAlign = 'center';
   ctx.fillText('🐻', 1110, 295);
-  // BEAR MARKET badge
+ 
   ctx.fillStyle = '#ff2d2d';
   roundRect(ctx, 1048, 330, 124, 36, 6); ctx.fill();
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 14px Arial Black';
   ctx.fillText('BEAR MARKET', 1110, 354);
-  // Bear claws
+ 
   ctx.strokeStyle = '#5D2E0C';
   ctx.lineWidth = 4;
   ctx.beginPath(); ctx.moveTo(1048, 295); ctx.lineTo(1010, 330); ctx.stroke();
