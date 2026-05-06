@@ -4,13 +4,13 @@
 
 An AI-powered Web3 app that brutally roasts your crypto trading decisions using real on-chain data from Mantle Network.
 
-![Crypto Roast](https://crypto-roast-rho.vercel.app)
+[Crypto Roast](https://crypto-roast-rho.vercel.app)
 
 ##  Live Demo
 
 **[crypto-roast-rho.vercel.app](https://crypto-roast-rho.vercel.app)**
 
-Built for the **Turing Test Hackathon 2026** — $120,000 prize pool
+Built for the **Turing Test Hackathon 2026** 
 Vote on DoraHacks: [dorahacks.io/buidl/43710](https://dorahacks.io/buidl/43710)
 
 ---
@@ -24,7 +24,7 @@ Paste any Mantle wallet address and get:
 -  4 **brutal roast lines** referencing your actual transactions
 -  A downloadable **comic-style meme card**
 -  A spot on the **Hall of Shame** weekly leaderboard
--  **Roast Battle** mode — challenge another wallet
+-  **Roast Battle** mode - challenge another wallet
 
 ---
 
@@ -152,7 +152,7 @@ Add environment variables in Vercel dashboard:
 
 crypto_roast/
 ├── public/
-│   └── index.html     
+    └── index.html     
 ├── server.js           
 ├── vercel.json         
 ├── package.json
