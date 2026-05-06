@@ -444,6 +444,37 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   link.download = 'crypto-roast-' + Date.now() + '.png';
   link.click();
 }
+  async function showHall() {
+  const section = document.getElementById('hallSection');
+  const list = document.getElementById('hallList');
+  section.style.display = 'block';
+  list.innerHTML = '<p style="color:#888; text-align:center; padding:20px;">Loading...</p>';
+  try {
+    const res = await fetch('/hall');
+    const data = await res.json();
+    if (data.length === 0) {
+      list.innerHTML = '<p style="color:#888; text-align:center; padding:20px;">No roasts yet! Be the first 🔥</p>';
+      return;
+    }
+    const medals = ['🥇', '🥈', '🥉'];
+    const colors = ['#FFD700', '#C0C0C0', '#CD7F32'];
+    list.innerHTML = data.map((entry, i) => `
+      <div style="display:flex; align-items:center; gap:12px; padding:10px 8px; border-bottom:1px solid #222; ${i===0?'background:#1f1a00;':''}">
+        <span style="font-size:1.4rem; min-width:32px; text-align:center;">${medals[i]||(i+1)}</span>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:13px; font-weight:600; color:${colors[i]||'#fff'};">${entry.title}</div>
+          <div style="font-size:11px; color:#555; font-family:monospace;">${entry.wallet.slice(0,6)}...${entry.wallet.slice(-4)}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="background:#e84040; color:white; font-size:12px; font-weight:700; padding:3px 10px; border-radius:99px;">${entry.degenScore}/100</div>
+          <div style="font-size:11px; color:#555; margin-top:3px;">${entry.date}</div>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    list.innerHTML = '<p style="color:#e84040; text-align:center; padding:20px;">Failed to load!</p>';
+  }
+}
   </script>
 </body>
 </html>
