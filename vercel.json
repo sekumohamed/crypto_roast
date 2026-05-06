@@ -8,28 +8,8 @@
   ],
   "routes": [
     {
-      "src": "/roast",
-      "dest": "server.js"
-    },
-    {
-      "src": "/hall",
-      "dest": "server.js"
-    },
-    {
-      "src": "/stats",
-      "dest": "server.js"
-    },
-    {
-      "src": "/battle",
-      "dest": "server.js"
-    },
-    {
-      "src": "/history/(.*)",
-      "dest": "server.js"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/public/$1"
+      "dest": "server.js"
     }
   ]
 }

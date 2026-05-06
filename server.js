@@ -238,4 +238,8 @@ app.get('/history/:wallet', async (req, res) => {
   res.json(data || []);
 });
 
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
+
 app.listen(3000, () => console.log('Crypto Roast running at http://localhost:3000'));
