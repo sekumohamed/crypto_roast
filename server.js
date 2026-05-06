@@ -168,4 +168,63 @@ app.get('/stats', async (req, res) => {
   res.json({ total: count || 0 });
 });
 
+app.post('/battle', async (req, res) => {
+  const { wallet1, wallet2 } = req.body;
+  if (!wallet1 || !wallet2) return res.status(400).json({ error: 'Two wallets required' });
+
+  try {
+    const fetchTx = async (wallet) => {
+      const r = await fetch(`https://api.routescan.io/v2/network/mainnet/evm/5000/address/${wallet}/transactions?limit=10`);
+      const d = await r.json();
+      const count = d.items?.length || 0;
+      const failed = d.items?.filter(tx => tx.result !== 'success').length || 0;
+      const total = d.items?.reduce((s, tx) => s + parseInt(tx.value || 0), 0) / 1e18 || 0;
+      return { wallet, count, failed, total };
+    };
+
+    const [w1, w2] = await Promise.all([fetchTx(wallet1), fetchTx(wallet2)]);
+
+    const battlePrompt = `You are CryptoRoast judging a ROAST BATTLE between two wallets on Mantle Network.
+
+Wallet 1 (${wallet1.slice(0,6)}...${wallet1.slice(-4)}):
+- Transactions: ${w1.count}
+- Failed txs: ${w1.failed}
+- Total MNT moved: ${w1.total.toFixed(4)}
+
+Wallet 2 (${wallet2.slice(0,6)}...${wallet2.slice(-4)}):
+- Transactions: ${w2.count}
+- Failed txs: ${w2.failed}
+- Total MNT moved: ${w2.total.toFixed(4)}
+
+Judge who is the BIGGER degen. Roast both wallets brutally, then declare a winner.
+
+Respond ONLY in this JSON format:
+{
+  "wallet1_roast": "2 sentence brutal roast of wallet 1",
+  "wallet2_roast": "2 sentence brutal roast of wallet 2",
+  "winner": "wallet1 or wallet2",
+  "winner_reason": "1 sentence savage explanation of why they won",
+  "battle_title": "funny title for this battle like The Ghost vs The Gambler"
+}`;
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.GROQ_API_KEY}` },
+      body: JSON.stringify({
+        model: 'compound-beta',
+        messages: [{ role: 'user', content: battlePrompt }],
+        max_tokens: 600
+      })
+    });
+
+    const data = await response.json();
+    const text = data.choices[0].message.content;
+    const clean = text.replace(/```json|```/g, '').trim();
+    res.json(JSON.parse(clean));
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Battle failed. Try again!' });
+  }
+});
+
 app.listen(3000, () => console.log('Crypto Roast running at http://localhost:3000'));

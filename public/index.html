@@ -42,6 +42,7 @@
   <div class="warning-banner">⚠️ WARNING: BRUTAL HONESTY AHEAD ⚠️</div>
   <h1>CRYPTO ROAST</h1>
   <p class="subtitle">Your on-chain history. Judged. Ruthlessly.</p>
+  <p id="statsCounter" style="color:#ff6b00; font-size:13px; margin-top:8px;">🔥 Loading...</p>
 
   <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">🦊 Connect MetaMask</button>
 
@@ -87,6 +88,15 @@
 </div>
 
   <script>
+    async function loadStats() {
+      try {
+        const res = await fetch('/stats');
+        const data = await res.json();
+        document.getElementById('statsCounter').textContent = 
+          `🔥 ${data.total} wallets roasted so far — are you next?`;
+      } catch(e) {}
+    }
+    loadStats();
     async function connectWallet() {
       if (typeof window.ethereum === 'undefined') {
         alert('MetaMask not found! Please install MetaMask extension.');
@@ -491,6 +501,78 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
         getRoast();
       }
     });
+    async function startBattle() {
+  const w1 = document.getElementById('battle1').value.trim();
+  const w2 = document.getElementById('battle2').value.trim();
+  if (!w1 || !w2) { alert('Enter both wallet addresses!'); return; }
+  
+  document.getElementById('battleResult').style.display = 'none';
+  const btn = event.target;
+  btn.textContent = '⚔️ Fighting...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/battle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ wallet1: w1, wallet2: w2 })
+    });
+    const data = await res.json();
+    if (data.error) { alert(data.error); return; }
+
+    document.getElementById('battleTitle').textContent = '⚔️ ' + data.battle_title;
+    document.getElementById('w1label').textContent = w1.slice(0,6) + '...' + w1.slice(-4);
+    document.getElementById('w2label').textContent = w2.slice(0,6) + '...' + w2.slice(-4);
+    document.getElementById('w1roast').textContent = data.wallet1_roast;
+    document.getElementById('w2roast').textContent = data.wallet2_roast;
+    
+    const isW1Winner = data.winner === 'wallet1';
+    document.getElementById('w1card').style.borderColor = isW1Winner ? '#FFD700' : '#333';
+    document.getElementById('w2card').style.borderColor = !isW1Winner ? '#FFD700' : '#333';
+    
+    const winnerAddr = isW1Winner ? w1 : w2;
+    document.getElementById('winnerText').textContent = '🏆 ' + winnerAddr.slice(0,6) + '...' + winnerAddr.slice(-4) + ' is the BIGGER DEGEN!';
+    document.getElementById('winnerReason').textContent = data.winner_reason;
+    document.getElementById('battleResult').style.display = 'block';
+  } catch(e) {
+    alert('Battle failed! Try again.');
+  } finally {
+    btn.textContent = '⚔️ START BATTLE';
+    btn.disabled = false;
+  }
+}
   </script>
+  <div id="battleSection" style="width:100%; max-width:560px; margin-top:32px;">
+  <div style="background:#1a1a1a; border:2px solid #ff2d2d; border-radius:12px; overflow:hidden;">
+    <div style="background:#111; padding:16px 20px; border-bottom:1px solid #333; text-align:center;">
+      <span style="font-family:'Bangers',cursive; font-size:1.8rem; color:#ff2d2d; letter-spacing:2px;">⚔️ ROAST BATTLE ⚔️</span>
+      <p style="color:#888; font-size:12px; margin:4px 0 0;">Two wallets enter. One degen wins.</p>
+    </div>
+    <div style="padding:16px;">
+      <input id="battle1" placeholder="Wallet 1: 0x..." style="width:100%; padding:10px; background:#111; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:8px; font-size:13px;" />
+      <div style="text-align:center; color:#ff2d2d; font-weight:700; margin:4px 0;">VS</div>
+      <input id="battle2" placeholder="Wallet 2: 0x..." style="width:100%; padding:10px; background:#111; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:12px; font-size:13px;" />
+      <button onclick="startBattle()" style="width:100%; padding:12px; background:#ff2d2d; color:#fff; border:none; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer;">⚔️ START BATTLE</button>
+      <div id="battleResult" style="margin-top:16px; display:none;">
+        <div id="battleTitle" style="text-align:center; font-family:'Bangers',cursive; font-size:1.4rem; color:#FFD700; margin-bottom:12px;"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+          <div id="w1card" style="background:#111; border:2px solid #333; border-radius:8px; padding:12px;">
+            <div style="font-size:11px; color:#555; margin-bottom:4px;" id="w1label"></div>
+            <div id="w1roast" style="font-size:13px; color:#ccc;"></div>
+          </div>
+          <div id="w2card" style="background:#111; border:2px solid #333; border-radius:8px; padding:12px;">
+            <div style="font-size:11px; color:#555; margin-bottom:4px;" id="w2label"></div>
+            <div id="w2roast" style="font-size:13px; color:#ccc;"></div>
+          </div>
+        </div>
+        <div id="winnerBox" style="background:#1f0808; border:2px solid #FFD700; border-radius:8px; padding:12px; text-align:center;">
+          <div style="font-size:11px; color:#888; margin-bottom:4px;">🏆 WINNER</div>
+          <div id="winnerText" style="color:#FFD700; font-weight:700; font-size:14px;"></div>
+          <div id="winnerReason" style="color:#ff6b00; font-size:12px; margin-top:4px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
