@@ -150,10 +150,12 @@ Add environment variables in Vercel dashboard:
 
 ##  Project Structure
 
+```
 crypto_roast/
 ├── public/
-    └── index.html     
-├── server.js           
-├── vercel.json         
+│   └── index.html      
+├── server.js          
+├── vercel.json        
 ├── package.json
-└── .env
+└── .env                
+```
