@@ -2,10 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "public/index.html",
-      "use": "@vercel/static"
-    },
-    {
       "src": "server.js",
       "use": "@vercel/node"
     }
@@ -24,8 +20,16 @@
       "dest": "server.js"
     },
     {
+      "src": "/battle",
+      "dest": "server.js"
+    },
+    {
+      "src": "/history/(.*)",
+      "dest": "server.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "public/$1"
+      "dest": "server.js"
     }
   ]
 }
