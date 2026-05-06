@@ -16,6 +16,14 @@
       "dest": "server.js"
     },
     {
+      "src": "/hall",
+      "dest": "server.js"
+    },
+    {
+      "src": "/stats",
+      "dest": "server.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "public/$1"
     }
