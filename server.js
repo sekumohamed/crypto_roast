@@ -76,14 +76,20 @@ app.post('/roast', async (req, res) => {
     const roast = JSON.parse(clean);
 
     // Save to Supabase
-    const { error } = await supabase.from('roasts').insert({
-      wallet,
-      title: roast.title,
-      degen_score: roast.degen_score,
-      verdict: roast.verdict
-    });
-    if (error) console.error('Supabase error:', error);
+    const { data: existing } = await supabase
+  .from('roasts')
+  .select('degen_score')
+  .eq('wallet', wallet)
+  .single();
 
+if (!existing || roast.degen_score > existing.degen_score) {
+  await supabase.from('roasts').upsert({
+    wallet,
+    title: roast.title,
+    degen_score: roast.degen_score,
+    verdict: roast.verdict
+  }, { onConflict: 'wallet' });
+}
     res.json(roast);
   } catch (err) {
     console.error('Error:', err);
