@@ -82,7 +82,6 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 node server.js
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
 
 ---
 
